@@ -4,7 +4,7 @@ import { getColumnsAndDataSource } from "@/helpers/get-table-from-entity";
 import { Entity } from "@/types/strapi.type";
 import { Table } from "antd";
 import React from "react";
-import { ButtonsTable } from "./buttons-table";
+import { AplButtonsTable } from "./apl-buttons-table";
 
 const DEFAULT_PAGE_SIZE = 3;
 const DEFAULT_CURRENT = 1;
@@ -52,7 +52,7 @@ export function AplTable({
     }
   }
 
-  const renderButtons = (record: any) => <ButtonsTable
+  const renderButtons = (record: any) => <AplButtonsTable
         id={record.key}
         onDelete={handleDelete}
         onEdit={handleUpdate}

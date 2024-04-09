@@ -1,9 +1,9 @@
 import { fetchMosos, deleteMoso } from "@/actions/actions";
 import { CreateButton } from "../../../components/crud-buttons/buttons";
-import { AplTable } from "@/components/table/table";
 import { redirect } from "next/navigation";
 import { Suspense } from "react";
 import { Skeleton } from "antd";
+import { AplTable } from "@/components/apl-table/apl-table";
 
 const Mosos = async () => {
   console.log('$$$RENDERIZA Mosos');
@@ -14,7 +14,6 @@ const Mosos = async () => {
   const error = false;
 
   const defaultHeaders = [
-    "Id",
     "Nombre",
     "Apellido",
     "Ventas Total",

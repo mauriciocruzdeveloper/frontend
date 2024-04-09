@@ -1,4 +1,4 @@
-"use client";
+'use client';
 
 import { PencilIcon, TrashIcon } from "@heroicons/react/24/outline";
 import React from "react";
@@ -9,7 +9,7 @@ export interface ButtonsProps {
   onEdit?: (id: number) => void;
 }
 
-export const ButtonsTable = ({ id, onDelete, onEdit }: ButtonsProps) => {
+export const AplButtonsTable = ({ id, onDelete, onEdit }: ButtonsProps) => {
   const handleOnEdit = () => {
     if (onEdit) {
       onEdit(id);
@@ -20,8 +20,6 @@ export const ButtonsTable = ({ id, onDelete, onEdit }: ButtonsProps) => {
       onDelete(id);
     }
   }
-
-  console.log('!!!ButtonsTable', id);
 
   return (
     <>

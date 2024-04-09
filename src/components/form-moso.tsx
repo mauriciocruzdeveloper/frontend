@@ -17,7 +17,6 @@ interface FormMosoProps {
 }
 
 export function FormMoso({ moso }: FormMosoProps) {
-  console.log('!!!CREATE MOSO', moso);
   const mosoSchema = object().shape({
     nombre: string().required(),
     apellido: string().required(),

@@ -21,7 +21,6 @@ export function CreateButton({ text = "Create", href = "#" }: ButtonProps) {
 }
 
 export function UpdateButton({ id, text = "Update", href = "#" }: ButtonProps) {
-  console.log('!!!UPDATE BUTTON', id)
   return (
     <Link
       href={`${href}/${id}/edit`}
