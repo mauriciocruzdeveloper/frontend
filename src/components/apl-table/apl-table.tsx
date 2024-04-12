@@ -1,10 +1,11 @@
-'use client'
+"use client";
 
 import { getColumnsAndDataSource } from "@/helpers/get-table-from-entity";
 import { Entity } from "@/types/strapi.type";
 import { Table } from "antd";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { AplButtonsTable } from "./apl-buttons-table";
+import { AplSkeleton } from "../apl-skeleton/apl-skeleton";
 
 const DEFAULT_PAGE_SIZE = 3;
 const DEFAULT_CURRENT = 1;
@@ -42,9 +43,16 @@ export function AplTable({
     defaultCurrent: DEFAULT_CURRENT,
   },
 }: AplTableProps) {
-  console.log('$$$RENDERIZA AplTable');
+  console.log("$$$RENDERIZA AplTable");
 
   const { columns, dataSource } = getColumnsAndDataSource(entities);
+
+  const [isHydrated, setIsHydrated] = useState(false);
+
+  useEffect(() => {
+    // Detectar cuando el componente esté hidratado
+    setIsHydrated(true);
+  }, []);
 
   if (defaultHeaders) {
     for (let i = 0; i < columns.length; i++) {
@@ -52,11 +60,13 @@ export function AplTable({
     }
   }
 
-  const renderButtons = (record: any) => <AplButtonsTable
-        id={record.key}
-        onDelete={handleDelete}
-        onEdit={handleUpdate}
-     />;
+  const renderButtons = (record: any) => (
+    <AplButtonsTable
+      id={record.key}
+      onDelete={handleDelete}
+      onEdit={handleUpdate}
+    />
+  );
 
   if (handleUpdate || handleDelete) {
     columns.push({
@@ -64,6 +74,10 @@ export function AplTable({
       key: "actions",
       render: renderButtons,
     });
+  }
+
+  if (!isHydrated) {
+    return <AplSkeleton />; // No renderiza nada hasta que esté hidratado
   }
 
   return (

@@ -8,7 +8,7 @@ function Home() {
       <ul>
         {Object.keys(interfaces).map((key, index) => (
           <li>
-            <Link key={index} href={`/${key.toLowerCase()}`}>
+            <Link key={index} href={`/dashboard/${key.toLowerCase()}s`}>
               {key}
             </Link>
           </li>

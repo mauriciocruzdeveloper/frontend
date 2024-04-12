@@ -1,10 +1,12 @@
 import { Entity } from "@/types/strapi.type";
 
-export function getColumnsAndDataSource(entities: Entity[]): { columns: any[], dataSource: any[] } { 
+export function getColumnsAndDataSource(entities: Entity[]): { columns: any[], dataSource: any[] } {
+    if (entities.length === 0) {
+      return { columns: [], dataSource: [] };
+    }
+    
     // Obtener las propiedades únicas de los objetos Entity
-    const allProperties = new Set<string>(
-      entities.flatMap(entity => Object.keys(entity))
-    );
+    const allProperties = Object.keys(entities[0]);
   
     // Crear el objeto columns
     const columns: any[] = [];

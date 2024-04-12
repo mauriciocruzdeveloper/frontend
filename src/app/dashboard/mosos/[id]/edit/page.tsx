@@ -1,5 +1,5 @@
 import { fetchMosoById } from "@/actions/actions";
-import { FormMoso } from "@/components/form-moso";
+import { FormMoso } from "@/components/forms/form-moso";
 
 export default async function Page({ params }: { params: { id: number } }) {
   const id = params.id;

@@ -58,8 +58,8 @@ export async function addMoso(moso: Omit<Moso, 'id'>) {
         console.error('Database Error:', err);
         throw new Error('Failed to add moso.');
     }
-    revalidatePath('/moso');
-    redirect('/moso');
+    revalidatePath('/dashboard/mosos');
+    redirect('/dashboard/mosos');
 }
 
 export async function updateMoso(moso: Moso) {
@@ -76,8 +76,8 @@ export async function updateMoso(moso: Moso) {
         console.error('Database Error:', err);
         throw new Error('Failed to update moso.');
     }
-    revalidatePath('/moso');
-    redirect('/moso');
+    revalidatePath('/dashboard/mosos');
+    redirect('/dashboard/mosos');
 }
 
 export async function deleteMoso(id: number) {
@@ -89,6 +89,6 @@ export async function deleteMoso(id: number) {
         console.error('Database Error:', err);
         throw new Error('Failed to delete moso.');
     }
-    revalidatePath('/moso');
-    redirect('/moso');
+    revalidatePath('/dashboard/mosos');
+    redirect('/dashboard/mosos');
 }
