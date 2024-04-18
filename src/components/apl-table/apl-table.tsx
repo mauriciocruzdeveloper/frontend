@@ -1,11 +1,12 @@
 "use client";
 
 import { getColumnsAndDataSource } from "@/helpers/get-table-from-entity";
-import { Entity } from "@/types/strapi.type";
-import { Table } from "antd";
+import { Pagination, Table } from "antd";
 import React, { useEffect, useState } from "react";
 import { AplButtonsTable } from "./apl-buttons-table";
 import { AplSkeleton } from "../apl-skeleton/apl-skeleton";
+import { Entity } from "@/types/strapi.types";
+import { usePathname, useSearchParams, useRouter } from "next/navigation";
 
 const DEFAULT_PAGE_SIZE = 3;
 const DEFAULT_CURRENT = 1;
@@ -22,13 +23,12 @@ export interface Column {
   key: string;
 }
 
-// Can entry the entities. Olso can entry the defaultHeaders.
 export interface AplTableProps {
   entities: Entity[];
+  page: number;
   defaultHeaders?: string[];
   handleUpdate?: (id: number) => void;
   handleDelete?: (id: number) => void;
-
   pagination?: PaginationTable;
 }
 
@@ -45,12 +45,21 @@ export function AplTable({
 }: AplTableProps) {
   console.log("$$$RENDERIZA AplTable");
 
+  console.log("!!!entities: ", entities);
+
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
   const { columns, dataSource } = getColumnsAndDataSource(entities);
+
+  console.log("!!!columns: ", columns);
+  console.log("!!!dataSource: ", dataSource);
 
   const [isHydrated, setIsHydrated] = useState(false);
 
   useEffect(() => {
-    // Detectar cuando el componente esté hidratado
+    // Detecta cuando el componente está hidratado
     setIsHydrated(true);
   }, []);
 
@@ -76,21 +85,37 @@ export function AplTable({
     });
   }
 
+  const createPageURL = (pageNumber: number | string): string => {
+    const params = new URLSearchParams(searchParams);
+    params.set("page", pageNumber.toString());
+    return `${pathname}?${params.toString()}`;
+  };
+
+  const handleOnChange = (page: number, pageSize: number) => {
+    router.push(createPageURL(page));
+  };
+
   if (!isHydrated) {
     return <AplSkeleton />; // No renderiza nada hasta que esté hidratado
   }
 
   return (
     <div className="flex flex-col">
-      <Table
-        dataSource={dataSource}
-        columns={columns}
-        pagination={{
-          total: pagination.total,
-          pageSize: pagination.pageSize,
-          defaultCurrent: pagination.defaultCurrent,
-        }}
-      />
+      <div className="mb-2">
+        <Table
+          dataSource={dataSource}
+          columns={columns}
+          pagination={false}
+        />
+      </div>
+      <div>
+        <Pagination
+          pageSize={pagination.pageSize}
+          total={pagination.total}
+          current={pagination.defaultCurrent}
+          onChange={handleOnChange}
+        />
+      </div>
     </div>
   );
 }

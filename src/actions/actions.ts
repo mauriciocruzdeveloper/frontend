@@ -7,47 +7,52 @@
 
 import { API_URL } from "@/config/config";
 import { transformFromStrapi, transformToStrapi } from "@/helpers/object-to-strapi-body";
-import { Moso } from "@/slices/moso";
+import { Moso } from "@/interfaces/interfaces";
 import {
+    Entity,
     StrapiEntity,
     StrapiResponseGetAll,
     StrapiResponseGetOne,
-} from "@/types/strapi.type";
+} from "@/types/strapi.types";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-export async function fetchMosos() {
+export async function fetchEntities<T extends Entity>(name: string, page?: number, pageSize?: number) {
     try {
-        const response = await fetch(`${API_URL}/mosos/`, {
+        let query = `${API_URL}/${name}`;
+        if (page) query = `${query}?pagination[page]=${page}`;
+        if (page && pageSize) query =  `${query}&pagination[pageSize]=${pageSize}`;
+        const response = await fetch(query, {
             cache: 'no-store',
         });
-        const responseMosos = await response.json() as StrapiResponseGetAll<Moso>;
-        const mosos: Moso[] = responseMosos.data.map((value: StrapiEntity<Moso>) => transformFromStrapi<Moso>(value));
-        return mosos;
+        const responseEntities = await response.json() as StrapiResponseGetAll<T>;
+        const total = responseEntities.meta.pagination.total;
+        const entities: T[] = responseEntities.data.map((value: StrapiEntity<T>) => transformFromStrapi<T>(value));
+        return { entities, total };
     } catch (err) {
         console.error('Database Error:', err);
-        throw new Error('Failed to fetch all mosos.');
+        throw new Error(`Failed to fetch all ${name}.`);
     }
 }
 
-export async function fetchMosoById(id: number) {
+export async function fetchEntityById<T extends Entity>(name: string, id: number) {
     try {
-        const response = await fetch(`${API_URL}/mosos/${id}`, {
+        const response = await fetch(`${API_URL}/${name}/${id}`, {
             cache: 'no-store',
         });
-        const responseMoso = await response.json() as StrapiResponseGetOne<Moso>;
-        const moso: Moso = transformFromStrapi<Moso>(responseMoso.data);
-        return moso;
+        const responseEntity = await response.json() as StrapiResponseGetOne<T>;
+        const entity: T = transformFromStrapi<T>(responseEntity.data);
+        return entity;
     } catch (err) {
         console.error('Database Error:', err);
-        throw new Error('Failed to fetch moso.');
+        throw new Error(`Failed to fetch ${name}.`);
     }
 }
 
-export async function addMoso(moso: Omit<Moso, 'id'>) {
+export async function addMoso<T extends Entity>(name: string, atributes: Omit<T, 'id'>) {
     try {
-        const body = transformToStrapi<Moso>(moso);
-        await fetch(`${API_URL}/mosos/`, {
+        const body = transformToStrapi<T>(atributes);
+        await fetch(`${API_URL}/${name}/`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -56,16 +61,16 @@ export async function addMoso(moso: Omit<Moso, 'id'>) {
         });
     } catch (err) {
         console.error('Database Error:', err);
-        throw new Error('Failed to add moso.');
+        throw new Error(`Failed to add ${name}.`);
     }
-    revalidatePath('/dashboard/mosos');
-    redirect('/dashboard/mosos');
+    revalidatePath(`/dashboard/${name}`);
+    redirect(`/dashboard/${name}`);
 }
 
-export async function updateMoso(moso: Moso) {
+export async function updateMoso<T extends Entity>(name: string, entity: T) {
     try {
-        const body = transformToStrapi<Moso>(moso);
-        await fetch(`${API_URL}/mosos/${moso.id}`, {
+        const body = transformToStrapi<T>(entity);
+        await fetch(`${API_URL}/${name}/${entity.id}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -74,21 +79,21 @@ export async function updateMoso(moso: Moso) {
         });
     } catch (err) {
         console.error('Database Error:', err);
-        throw new Error('Failed to update moso.');
+        throw new Error(`Failed to update ${name}.`);
     }
-    revalidatePath('/dashboard/mosos');
-    redirect('/dashboard/mosos');
+    revalidatePath(`/dashboard/${name}`);
+    redirect(`/dashboard/${name}`);
 }
 
-export async function deleteMoso(id: number) {
+export async function deleteMoso(name: string, id: number) {
     try {
-        await fetch(`${API_URL}/mosos/${id}`, {
+        await fetch(`${API_URL}/${name}/${id}`, {
             method: 'DELETE',
         });
     } catch (err) {
         console.error('Database Error:', err);
-        throw new Error('Failed to delete moso.');
+        throw new Error(`Failed to delete ${name}.`);
     }
-    revalidatePath('/dashboard/mosos');
-    redirect('/dashboard/mosos');
+    revalidatePath(`/dashboard/${name}`);
+    redirect(`/dashboard/${name}`);
 }

@@ -1,4 +1,4 @@
-import { Entity, StrapiBodyPost, StrapiEntity } from "@/types/strapi.type";
+import { Entity, StrapiBodyPost, StrapiEntity } from "@/types/strapi.types";
 
 export function transformToStrapi<
 T extends Entity
@@ -13,8 +13,10 @@ T extends Entity
 export function transformFromStrapi<T extends Entity>(strapiEntity: StrapiEntity<T>): T {
   const {id, attributes} = strapiEntity;
 
-  return {
+  const entity = {
     id,
     ...attributes
   } as T;
+
+  return entity;
 }

@@ -1,7 +1,6 @@
 import { AplBreadCrumb } from "@/components/apl-breadcrumb/apl-breadcrumb";
 import AplNavLinks from "@/components/apl-sider/apl-nav-links";
 import AplSideNav from "@/components/apl-sider/apl-sidenav";
-import styles from "./styles.module.css";
 
 export default function AplLayout({ children }: { children: React.ReactNode }) {
   console.log("$$$RENDERIZA AplLayout");

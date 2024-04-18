@@ -1,4 +1,4 @@
-import { Entity } from "@/types/strapi.type";
+import { Entity } from "@/types/strapi.types";
 
 export function getColumnsAndDataSource(entities: Entity[]): { columns: any[], dataSource: any[] } {
     if (entities.length === 0) {

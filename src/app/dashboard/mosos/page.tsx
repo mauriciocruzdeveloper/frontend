@@ -1,12 +1,24 @@
-import { fetchMosos, deleteMoso } from "@/actions/actions";
+import { deleteMoso, fetchEntities } from "@/actions/actions";
 import { CreateButton } from "../../../components/crud-buttons/buttons";
 import { redirect } from "next/navigation";
 import { AplTable } from "@/components/apl-table/apl-table";
 
-const Mosos = async () => {
-  console.log("$$$RENDERIZA Mosos");
+const PAGE_SIZE = 3;
 
-  const mosos = await fetchMosos();
+interface SearchParams {
+  searchParams?: {
+    query?: string;
+    page?: string;
+  };
+}
+
+const Mosos = async ({ searchParams }: SearchParams) => {
+  console.log("$$$RENDERIZA Mosos", searchParams);
+  const page = Number(searchParams?.page ?? 1);
+
+  const { entities: mosos, total } = await fetchEntities('mosos', page, PAGE_SIZE);
+
+  console.log('!!!mosos: ', mosos);
 
   const defaultHeaders = [
     "Nombre",
@@ -19,7 +31,7 @@ const Mosos = async () => {
 
   const handleOnDelete = async (id: number) => {
     "use server";
-    await deleteMoso(id);
+    await deleteMoso('mosos', id);
   };
 
   const handleOnUpdate = async (id: number) => {
@@ -35,6 +47,14 @@ const Mosos = async () => {
       </div>
       <AplTable
         entities={mosos}
+        page={page}
+        pagination={
+          {
+            total,
+            pageSize: PAGE_SIZE,
+            defaultCurrent: page,
+          }
+        }
         defaultHeaders={defaultHeaders}
         handleDelete={handleOnDelete}
         handleUpdate={handleOnUpdate}
