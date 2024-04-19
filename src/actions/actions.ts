@@ -17,11 +17,12 @@ import {
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 
-export async function fetchEntities<T extends Entity>(name: string, page?: number, pageSize?: number) {
+export async function fetchEntities<T extends Entity>(name: string, page?: number, pageSize?: number, filters?: string) {
     try {
         let query = `${API_URL}/${name}`;
         if (page) query = `${query}?pagination[page]=${page}`;
         if (page && pageSize) query =  `${query}&pagination[pageSize]=${pageSize}`;
+        if (filters) query = `${query}&_q=${filters}`;
         const response = await fetch(query, {
             cache: 'no-store',
         });
@@ -49,7 +50,7 @@ export async function fetchEntityById<T extends Entity>(name: string, id: number
     }
 }
 
-export async function addMoso<T extends Entity>(name: string, atributes: Omit<T, 'id'>) {
+export async function addEntity<T extends Entity>(name: string, atributes: Omit<T, 'id'>) {
     try {
         const body = transformToStrapi<T>(atributes);
         await fetch(`${API_URL}/${name}/`, {
@@ -67,7 +68,7 @@ export async function addMoso<T extends Entity>(name: string, atributes: Omit<T,
     redirect(`/dashboard/${name}`);
 }
 
-export async function updateMoso<T extends Entity>(name: string, entity: T) {
+export async function updateEntity<T extends Entity>(name: string, entity: T) {
     try {
         const body = transformToStrapi<T>(entity);
         await fetch(`${API_URL}/${name}/${entity.id}`, {
@@ -85,7 +86,7 @@ export async function updateMoso<T extends Entity>(name: string, entity: T) {
     redirect(`/dashboard/${name}`);
 }
 
-export async function deleteMoso(name: string, id: number) {
+export async function deleteEntity(name: string, id: number) {
     try {
         await fetch(`${API_URL}/${name}/${id}`, {
             method: 'DELETE',

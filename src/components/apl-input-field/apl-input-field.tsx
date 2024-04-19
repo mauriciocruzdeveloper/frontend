@@ -25,7 +25,6 @@ export function AplInputField({
   type,
   errors,
 }: AplInputFieldProps): JSX.Element {
-  console.log('&&&ERRORS EN INPUT: ', errors);
   return (
     <div className={`${className} flex flex-col w-64 my-2`}>
       <label

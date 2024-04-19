@@ -7,6 +7,7 @@ import { AplButtonsTable } from "./apl-buttons-table";
 import { AplSkeleton } from "../apl-skeleton/apl-skeleton";
 import { Entity } from "@/types/strapi.types";
 import { usePathname, useSearchParams, useRouter } from "next/navigation";
+import Search from "./search";
 
 const DEFAULT_PAGE_SIZE = 3;
 const DEFAULT_CURRENT = 1;
@@ -45,16 +46,11 @@ export function AplTable({
 }: AplTableProps) {
   console.log("$$$RENDERIZA AplTable");
 
-  console.log("!!!entities: ", entities);
-
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const router = useRouter();
 
   const { columns, dataSource } = getColumnsAndDataSource(entities);
-
-  console.log("!!!columns: ", columns);
-  console.log("!!!dataSource: ", dataSource);
 
   const [isHydrated, setIsHydrated] = useState(false);
 
@@ -78,11 +74,13 @@ export function AplTable({
   );
 
   if (handleUpdate || handleDelete) {
-    columns.push({
-      title: "Actions",
-      key: "actions",
-      render: renderButtons,
-    });
+    if (columns.length) {
+      columns.push({
+        title: "Actions",
+        key: "actions",
+        render: renderButtons,
+      });
+    }
   }
 
   const createPageURL = (pageNumber: number | string): string => {
@@ -99,14 +97,18 @@ export function AplTable({
     return <AplSkeleton />; // No renderiza nada hasta que esté hidratado
   }
 
+  let fields: string[] = [];
+  if (entities.length) {
+    fields = Object.keys(entities[0]);
+  }
+
   return (
     <div className="flex flex-col">
       <div className="mb-2">
-        <Table
-          dataSource={dataSource}
-          columns={columns}
-          pagination={false}
-        />
+        <Search placeholder="Search..." />
+      </div>
+      <div className="mb-2">
+        <Table dataSource={dataSource} columns={columns} pagination={false} />
       </div>
       <div>
         <Pagination

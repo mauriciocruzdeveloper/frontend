@@ -1,7 +1,7 @@
 "use client";
 
 import { Moso } from "@/interfaces/interfaces";
-import { addMoso, updateMoso } from "@/actions/actions";
+import { addEntity, updateEntity } from "@/actions/actions";
 import { object, string, number, ValidationError } from "yup";
 import { useState } from "react";
 import { AplInputField } from "../apl-input-field/apl-input-field";
@@ -35,22 +35,19 @@ export function FormMoso({ moso }: FormMosoProps) {
     } catch (err: any) {
       if (err instanceof ValidationError && err.path) {
         const value = err.path;
-        console.log("&&&Validation Error:", err.errors);
         setErrors((prev) => ({ [value]: err.message.toString() }));
       }
       return;
     }
     if (moso) {
-      await updateMoso<Moso>('mosos', {
+      await updateEntity<Moso>('mosos', {
         id: moso.id,
         ...newMoso,
       });
     } else {
-      await addMoso<Moso>('mosos', newMoso);
+      await addEntity<Moso>('mosos', newMoso);
     }
   }
-
-  console.log("&&&errors: ", errors);
 
   return (
     <form className="flex flex-col h-full" action={handleFormAction}>
