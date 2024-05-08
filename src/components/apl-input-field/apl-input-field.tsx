@@ -15,7 +15,12 @@ interface NumberInputFieldProps extends BaseInputFieldProps {
   value?: number;
 }
 
-type AplInputFieldProps = TextInputFieldProps | NumberInputFieldProps;
+interface CheckBoxFieldProps extends BaseInputFieldProps {
+  type: "checkbox";
+  value?: boolean;
+}
+
+type AplInputFieldProps = TextInputFieldProps | NumberInputFieldProps | CheckBoxFieldProps;
 
 export function AplInputField({
   className,
@@ -38,7 +43,7 @@ export function AplInputField({
         type={type}
         id={name}
         name={name}
-        defaultValue={value}
+        defaultValue={type === "checkbox" ? undefined : value}
       />
       {errors[name] && <label className="text-red-500">{errors[name]}</label>}
     </div>
