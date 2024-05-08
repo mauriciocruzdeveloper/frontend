@@ -1,36 +1,34 @@
 "use client";
 
-import { Moso } from "@/interfaces/interfaces";
+import { PedidoPlato } from "@/interfaces/interfaces";
 import { addEntity, updateEntity } from "@/actions/actions";
 import { object, string, number, boolean, ValidationError } from "yup";
 import { useState } from "react";
 import { AplInputField } from "../apl-input-field/apl-input-field";
 import { FormErrors } from "@/types/common.types";
 
-interface FormMosoProps {
-  moso?: Moso;
+interface FormPedidoPlatoProps {
+  pedidoPlato?: PedidoPlato;
 }
 
-type MosoErrors = FormErrors<Omit<Moso, "id">>;
+type PedidoPlatoErrors = FormErrors<Omit<PedidoPlato, "id">>;
 
-export function FormMoso({ moso }: FormMosoProps) {
-  const [errors, setErrors] = useState<MosoErrors>({});
+export function FormPedidoPlato({ pedidoPlato }: FormPedidoPlatoProps) {
+  const [errors, setErrors] = useState<PedidoPlatoErrors>({});
   
-  const mosoSchema = object().shape({
-    nombre: string().required(),
-apellido: string().required(),
-ventas_total: number().required(),
+  const pedidoPlatoSchema = object().shape({
+    pedido_id: number().required(),
+plato_id: number().required(),
   });
 
   async function handleFormAction(formData: any) {
-    const newMoso: Omit<Moso, "id"> = {
-      nombre: formData.get("nombre"),
-apellido: formData.get("apellido"),
-ventas_total: Number(formData.get("ventas_total")),
+    const newPedidoPlato: Omit<PedidoPlato, "id"> = {
+      pedido_id: formData.get("pedido_id"),
+plato_id: formData.get("plato_id"),
     };
     try {
       // TODO: Validar cuando hago onChange. Meter el onChange en el input
-      await mosoSchema.validate(newMoso);
+      await pedidoPlatoSchema.validate(newPedidoPlato);
       setErrors({});
     } catch (err: any) {
       if (err instanceof ValidationError && err.path) {
@@ -39,20 +37,20 @@ ventas_total: Number(formData.get("ventas_total")),
       }
       return;
     }
-    if (moso) {
-      await updateEntity<Moso>('mosos', {
-        id: moso.id,
-        ...newMoso,
+    if (pedidoPlato) {
+      await updateEntity<PedidoPlato>('pedidoPlatos', {
+        id: pedidoPlato.id,
+        ...newPedidoPlato,
       });
     } else {
-      await addEntity<Moso>('mosos', newMoso);
+      await addEntity<PedidoPlato>('pedidoPlatos', newPedidoPlato);
     }
   }
 
   return (
     <form className="flex flex-col h-full" action={handleFormAction}>
       <div className="flex justify-between p-2 mb-2 bg-gray-100 rounded-md">
-        <h1 className="py-2">Mosos</h1>
+        <h1 className="py-2">PedidoPlatos</h1>
         <button
           className="flex h-10 items-center rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
           type="submit"
@@ -62,23 +60,16 @@ ventas_total: Number(formData.get("ventas_total")),
       </div>
       <div className="p-2 bg-gray-100 flex flex-col flex-1 rounded-md grid-cols-3">
         <AplInputField
-  labelText="Nombre"
-  name="nombre"
-  value={moso?.nombre}
-  type="text"
+  labelText="Pedido ID"
+  name="pedido_id"
+  value={pedidoPlato?.pedido_id}
+  type="number"
   errors={errors}
 />
 <AplInputField
-  labelText="Apellido"
-  name="apellido"
-  value={moso?.apellido}
-  type="text"
-  errors={errors}
-/>
-<AplInputField
-  labelText="Ventas Total"
-  name="ventas_total"
-  value={moso?.ventas_total}
+  labelText="Plato ID"
+  name="plato_id"
+  value={pedidoPlato?.plato_id}
   type="number"
   errors={errors}
 />

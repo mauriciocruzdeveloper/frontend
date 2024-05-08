@@ -7,7 +7,6 @@
 
 import { API_URL } from "@/config/config";
 import { transformFromStrapi, transformToStrapi } from "@/helpers/object-to-strapi-body";
-import { Moso } from "@/interfaces/interfaces";
 import {
     Entity,
     StrapiEntity,
@@ -23,12 +22,15 @@ export async function fetchEntities<T extends Entity>(name: string, page?: numbe
         if (page) query = `${query}?pagination[page]=${page}`;
         if (page && pageSize) query =  `${query}&pagination[pageSize]=${pageSize}`;
         if (filters) query = `${query}&_q=${filters}`;
+        // add populate to query
+        query = `${query}&populate=*`;
         const response = await fetch(query, {
             cache: 'no-store',
         });
         const responseEntities = await response.json() as StrapiResponseGetAll<T>;
         const total = responseEntities.meta.pagination.total;
         const entities: T[] = responseEntities.data.map((value: StrapiEntity<T>) => transformFromStrapi<T>(value));
+        console.log('!!!entities: ', entities);
         return { entities, total };
     } catch (err) {
         console.error('Database Error:', err);

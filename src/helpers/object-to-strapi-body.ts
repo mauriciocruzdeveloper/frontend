@@ -1,22 +1,29 @@
 import { Entity, StrapiBodyPost, StrapiEntity } from "@/types/strapi.types";
 
 export function transformToStrapi<
-T extends Entity
+  T extends Entity
 >(entity: Omit<T, 'id'>): StrapiBodyPost<T> {
-  const {...data} = entity;
+  const { ...data } = entity;
 
   return {
-    data  
+    data
   }
 }
 
 export function transformFromStrapi<T extends Entity>(strapiEntity: StrapiEntity<T>): T {
-  const {id, attributes} = strapiEntity;
+  const { id, attributes } = strapiEntity;
 
-  const entity = {
+  let entity = {
     id,
     ...attributes
   } as T;
 
-  return entity;
+  let newEntity: { [key: string]: any } = { ...entity };
+  Object.keys(entity).forEach((key) => {
+    if (entity[key]?.data && typeof entity[key] === 'object') {
+      newEntity[key] = transformFromStrapi(entity[key].data);
+    }
+  });
+
+  return newEntity as T;
 }

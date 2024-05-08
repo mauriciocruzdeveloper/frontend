@@ -26,8 +26,8 @@ const Mosos = async ({ searchParams }: SearchParams) => {
 
   const defaultHeaders = [
     "Nombre",
-"Apellido",
-"Ventas Total",
+    "Apellido",
+    "Ventas Total",
     "Fecha 1",
     "Fecha 2",
     "Fecha 3",

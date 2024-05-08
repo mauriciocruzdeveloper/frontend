@@ -5,4 +5,4 @@ export interface Plato { id: number; descripcion: string; precio: number; dispon
 export interface Bebida { id: number; descripcion: string; precio: number; disponibilidad: boolean; };
 export interface PedidoPlato { id: number; pedido_id: number; plato_id: number; };
 export interface PedidoBebida { id: number; pedido_id: number; bebida_id: number; };
-export interface Mesa { id: number; numero: string; capacidad: number; moso: Moso; };
+export interface Mesa { id: number; numero: string; capacidad: number; moso_id: number; };

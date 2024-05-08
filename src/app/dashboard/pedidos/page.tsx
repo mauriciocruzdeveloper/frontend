@@ -12,22 +12,24 @@ interface SearchParams {
   };
 }
 
-const Mosos = async ({ searchParams }: SearchParams) => {
-  console.log("$$$RENDERIZA Mosos", searchParams);
+const Pedidos = async ({ searchParams }: SearchParams) => {
+  console.log("$$$RENDERIZA Pedidos", searchParams);
   const page = Number(searchParams?.page ?? 1);
   const query = searchParams?.query ?? "";
 
-  const { entities: mosos, total } = await fetchEntities(
-    "mosos",
+  const { entities: pedidos, total } = await fetchEntities(
+    "pedidos",
     page,
     PAGE_SIZE,
     query,
   );
 
   const defaultHeaders = [
-    "Nombre",
-"Apellido",
-"Ventas Total",
+    "id",
+"Fecha_hora",
+"Moso_id",
+"Cliente_id",
+"Mesa_id",
     "Fecha 1",
     "Fecha 2",
     "Fecha 3",
@@ -35,23 +37,23 @@ const Mosos = async ({ searchParams }: SearchParams) => {
 
   const handleOnDelete = async (id: number) => {
     "use server";
-    await deleteEntity("mosos", id);
+    await deleteEntity("pedidos", id);
   };
 
   const handleOnUpdate = async (id: number) => {
     "use server";
-    redirect(`/dashboard/mosos/${id}/edit`);
+    redirect(`/dashboard/pedidos/${id}/edit`);
   };
 
   return (
     <div>
       <div className="flex justify-between p-2 mb-2 bg-gray-200 rounded-md">
-        <h1 className="py-2">Mosos</h1>
-        <CreateButton href="/dashboard/mosos" />
+        <h1 className="py-2">Pedidos</h1>
+        <CreateButton href="/dashboard/pedidos" />
       </div>
       <div>
         <AplTable
-          entities={mosos}
+          entities={pedidos}
           page={page}
           pagination={{
             total,
@@ -67,4 +69,4 @@ const Mosos = async ({ searchParams }: SearchParams) => {
   );
 };
 
-export default Mosos;
+export default Pedidos;

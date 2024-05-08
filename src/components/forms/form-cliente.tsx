@@ -1,36 +1,34 @@
 "use client";
 
-import { Moso } from "@/interfaces/interfaces";
+import { Cliente } from "@/interfaces/interfaces";
 import { addEntity, updateEntity } from "@/actions/actions";
 import { object, string, number, boolean, ValidationError } from "yup";
 import { useState } from "react";
 import { AplInputField } from "../apl-input-field/apl-input-field";
 import { FormErrors } from "@/types/common.types";
 
-interface FormMosoProps {
-  moso?: Moso;
+interface FormClienteProps {
+  cliente?: Cliente;
 }
 
-type MosoErrors = FormErrors<Omit<Moso, "id">>;
+type ClienteErrors = FormErrors<Omit<Cliente, "id">>;
 
-export function FormMoso({ moso }: FormMosoProps) {
-  const [errors, setErrors] = useState<MosoErrors>({});
+export function FormCliente({ cliente }: FormClienteProps) {
+  const [errors, setErrors] = useState<ClienteErrors>({});
   
-  const mosoSchema = object().shape({
+  const clienteSchema = object().shape({
     nombre: string().required(),
 apellido: string().required(),
-ventas_total: number().required(),
   });
 
   async function handleFormAction(formData: any) {
-    const newMoso: Omit<Moso, "id"> = {
+    const newCliente: Omit<Cliente, "id"> = {
       nombre: formData.get("nombre"),
 apellido: formData.get("apellido"),
-ventas_total: Number(formData.get("ventas_total")),
     };
     try {
       // TODO: Validar cuando hago onChange. Meter el onChange en el input
-      await mosoSchema.validate(newMoso);
+      await clienteSchema.validate(newCliente);
       setErrors({});
     } catch (err: any) {
       if (err instanceof ValidationError && err.path) {
@@ -39,20 +37,20 @@ ventas_total: Number(formData.get("ventas_total")),
       }
       return;
     }
-    if (moso) {
-      await updateEntity<Moso>('mosos', {
-        id: moso.id,
-        ...newMoso,
+    if (cliente) {
+      await updateEntity<Cliente>('clientes', {
+        id: cliente.id,
+        ...newCliente,
       });
     } else {
-      await addEntity<Moso>('mosos', newMoso);
+      await addEntity<Cliente>('clientes', newCliente);
     }
   }
 
   return (
     <form className="flex flex-col h-full" action={handleFormAction}>
       <div className="flex justify-between p-2 mb-2 bg-gray-100 rounded-md">
-        <h1 className="py-2">Mosos</h1>
+        <h1 className="py-2">Clientes</h1>
         <button
           className="flex h-10 items-center rounded-lg bg-blue-600 px-4 text-sm font-medium text-white transition-colors hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
           type="submit"
@@ -64,22 +62,15 @@ ventas_total: Number(formData.get("ventas_total")),
         <AplInputField
   labelText="Nombre"
   name="nombre"
-  value={moso?.nombre}
+  value={cliente?.nombre}
   type="text"
   errors={errors}
 />
 <AplInputField
   labelText="Apellido"
   name="apellido"
-  value={moso?.apellido}
+  value={cliente?.apellido}
   type="text"
-  errors={errors}
-/>
-<AplInputField
-  labelText="Ventas Total"
-  name="ventas_total"
-  value={moso?.ventas_total}
-  type="number"
   errors={errors}
 />
       </div>
