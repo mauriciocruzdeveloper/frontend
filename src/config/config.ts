@@ -1,1 +1,1 @@
-export const API_URL = "http://localhost:1337/api";
+export const API_URL = "https://productive-beef-ab71718256.strapiapp.com/api";
