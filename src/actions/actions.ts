@@ -29,7 +29,7 @@ export async function fetchEntities<T extends Entity>(name: string, page?: numbe
         });
 
         const responseEntities = await response.json() as StrapiResponseGetAll<T>;
-        if (responseEntities.error) return { entities: null, error: responseEntities.error};
+        if (responseEntities.error) return { entities: [], total: 0, error: responseEntities.error};
 
         const total = responseEntities.meta.pagination.total;
         const entities: T[] = responseEntities.data.map((value: StrapiEntity<T>) => transformFromStrapi<T>(value));
