@@ -4,6 +4,9 @@ import { PedidoPlato } from "@/interfaces/interfaces";
 
 export default async function Page({ params }: { params: { id: number } }) {
   const id = params.id;
-  const pedidoPlato = await fetchEntityById<PedidoPlato>('pedidoPlatos', id);
+  const { entity: pedidoPlato, error } = await fetchEntityById<PedidoPlato>('pedidoPlatos', id);
+
+  if (error) return (<div>Error: {error.status}</div>);
+
   return <FormPedidoPlato pedidoPlato={pedidoPlato} />;
 }

@@ -4,6 +4,9 @@ import { Mesa } from "@/interfaces/interfaces";
 
 export default async function Page({ params }: { params: { id: number } }) {
   const id = params.id;
-  const mesa = await fetchEntityById<Mesa>('mesas', id);
+  const { entity: mesa, error } = await fetchEntityById<Mesa>('mesas', id);
+
+  if (error) return (<div>Error: {error.status}</div>);
+
   return <FormMesa mesa={mesa} />;
 }

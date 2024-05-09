@@ -29,10 +29,11 @@ export async function fetchEntities<T extends Entity>(name: string, page?: numbe
         });
 
         const responseEntities = await response.json() as StrapiResponseGetAll<T>;
+        if (responseEntities.error) return { entities: null, error: responseEntities.error};
 
         const total = responseEntities.meta.pagination.total;
         const entities: T[] = responseEntities.data.map((value: StrapiEntity<T>) => transformFromStrapi<T>(value));
-        return { entities, total, error: responseEntities.error};
+        return { entities, total};
     } catch (err) {
         throw new Error(`Failed to fetch all ${name}.`);
     }
@@ -44,9 +45,10 @@ export async function fetchEntityById<T extends Entity>(name: string, id: number
             cache: 'no-store',
         });
         const responseEntity = await response.json() as StrapiResponseGetOne<T>;
+        if (responseEntity.error) return { entity: null, error: responseEntity.error};
 
         const entity: T = transformFromStrapi<T>(responseEntity.data);
-        return { entity, error: responseEntity.error};
+        return { entity };
     } catch (err) {
         console.error('Database Error:', err);
         throw new Error(`Failed to fetch ${name}.`);
