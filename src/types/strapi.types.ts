@@ -13,7 +13,7 @@ export interface StrapiBodyPost<T extends Entity> {
 }
 
 export interface StrapiResponseBase {
-    error: {
+    error?: {
         status: number,
         name: string,
         message: string,
