@@ -17,7 +17,7 @@ const Mosos = async ({ searchParams }: SearchParams) => {
   const page = Number(searchParams?.page ?? 1);
   const query = searchParams?.query ?? "";
 
-  const { entities: mosos, total } = await fetchEntities(
+  const { entities: mosos, total, error } = await fetchEntities(
     "mosos",
     page,
     PAGE_SIZE,
@@ -42,6 +42,10 @@ const Mosos = async ({ searchParams }: SearchParams) => {
     "use server";
     redirect(`/dashboard/mosos/${id}/edit`);
   };
+
+  console.log('!!!error: ', error);
+
+  if (error) return (<div>Error: {error.status}</div>);
 
   return (
     <div>

@@ -12,7 +12,16 @@ export interface StrapiBodyPost<T extends Entity> {
     data: Omit<T, "id">;
 }
 
-export interface StrapiResponseGetAll<T extends Entity> {
+export interface StrapiResponseBase {
+    error: {
+        status: number,
+        name: string,
+        message: string,
+        details: {},
+    }  
+}
+
+export interface StrapiResponseGetAll<T extends Entity> extends StrapiResponseBase {
     data: StrapiEntity<T>[];
     meta: {
         pagination: {
@@ -24,10 +33,10 @@ export interface StrapiResponseGetAll<T extends Entity> {
       };
 }
 
-export interface StrapiResponseGetOne<T extends Entity> {
+export interface StrapiResponseGetOne<T extends Entity> extends StrapiResponseBase{
     data: StrapiEntity<T>;
 }
 
-export interface StrapiResponsePost<T extends Entity> {
+export interface StrapiResponsePost<T extends Entity> extends StrapiResponseBase{
     data: StrapiEntity<T>;
 }

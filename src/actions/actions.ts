@@ -27,13 +27,14 @@ export async function fetchEntities<T extends Entity>(name: string, page?: numbe
         const response = await fetch(query, {
             cache: 'no-store',
         });
+
         const responseEntities = await response.json() as StrapiResponseGetAll<T>;
+        if (responseEntities.error) return { entities: [], total: 0, error: responseEntities.error};
+
         const total = responseEntities.meta.pagination.total;
         const entities: T[] = responseEntities.data.map((value: StrapiEntity<T>) => transformFromStrapi<T>(value));
-        console.log('!!!entities: ', entities);
         return { entities, total };
     } catch (err) {
-        console.error('Database Error:', err);
         throw new Error(`Failed to fetch all ${name}.`);
     }
 }
@@ -44,6 +45,8 @@ export async function fetchEntityById<T extends Entity>(name: string, id: number
             cache: 'no-store',
         });
         const responseEntity = await response.json() as StrapiResponseGetOne<T>;
+        if (responseEntity.error) return { entities: [], total: 0, error: responseEntity.error};
+
         const entity: T = transformFromStrapi<T>(responseEntity.data);
         return entity;
     } catch (err) {
