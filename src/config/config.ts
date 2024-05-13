@@ -1,1 +1,1 @@
-export const API_URL = "https://productive-beef-ab71718256.strapiapp.com/api";
+export const API_URL = "https://backend-apollo.onrender.com/api";
